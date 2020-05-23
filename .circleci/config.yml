@@ -38,3 +38,11 @@ jobs:
           color: '#42e2f4'
           message: This is a custom message notification
           webhook: ${SLACK_WEBHOOK}
+workflows:
+  version: 2
+  build:
+    jobs:
+      - build:
+          filters:
+            branches:
+              only: master
