@@ -24,7 +24,6 @@ jobs:
           name: Push image to repository
           command: docker push ${GCR_REPO}/${IMAGE_NAME}:$CIRCLE_SHA1
       - slack/status:
-          color: '#42e2f4'
           include_project_field: true
           success_message: ':circleci-pass: Branch: $CIRCLE_BRANCH\nUser：$CIRCLE_USERNAME'
           failure_message: ':circleci-fail: Branch: $CIRCLE_BRANCH\nUser：$CIRCLE_USERNAME'
