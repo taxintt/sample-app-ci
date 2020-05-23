@@ -5,11 +5,6 @@ jobs:
   build:
     docker:
       - image: google/cloud-sdk
-    # enviromnent:
-    #   IMAGE_NAME: 
-    #   GCR_REPO: 
-    #   GCP_PROJECT: 
-    #   CLOUDSDK_COMPUTE_ZONE: 
     working_directory: /go/src/github.com/TaxiN/sample-app-ci
     steps:
       - setup_remote_docker:
@@ -25,18 +20,14 @@ jobs:
       - run:
           name: Build docker image and set image tag
           command: docker build -t ${GCR_REPO}/${IMAGE_NAME}:$CIRCLE_SHA1 .
-      # - run:
-      #     name: Tag to latest
-      #     command: docker tag ${GCR_REPO}/${IMAGE_NAME}:latest ${GCR_REPO}/${IMAGE_NAME}:${CIRCLE_SHA1}
-      # - run:
-      #     name: Docker login 
-      #     command: docker login -u ${DOCKER_USER} -p ${DOCKER_PASS}
       - run:
           name: Push image to repository
-          command: docker push ${GCR_REPO}/${IMAGE_NAME}
-      - slack/notify:
+          command: docker push ${GCR_REPO}/${IMAGE_NAME}:$CIRCLE_SHA1
+      - slack/status:
           color: '#42e2f4'
-          message: Message notification
+          include_project_field: true
+          success_message: ':circleci-pass: Branch: $CIRCLE_BRANCH\nUser：$CIRCLE_USERNAME'
+          failure_message: ':circleci-fail: Branch: $CIRCLE_BRANCH\nUser：$CIRCLE_USERNAME'
           webhook: ${SLACK_WEBHOOK}
 workflows:
   version: 2
