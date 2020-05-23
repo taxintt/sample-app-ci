@@ -10,7 +10,7 @@ jobs:
     #   GCR_REPO: 
     #   GCP_PROJECT: 
     #   CLOUDSDK_COMPUTE_ZONE: 
-    working_directory: /go/src/github.com/taxin/ci-test
+    working_directory: /go/src/github.com/TaxiN/sample-app-ci
     steps:
       - setup_remote_docker:
           version: 18.06.0-ce
