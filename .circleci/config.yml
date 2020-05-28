@@ -13,10 +13,10 @@ jobs:
       - run:
           name: Authenticate for pushing image to GCR
           command: |
-            gcloud --quiet config set project ${GCP_PROJECT}
-            gcloud --quiet config set compute/zone ${CLOUDSDK_COMPUTE_ZONE}
             echo ${ACCT_AUTH} | base64 -d > ${HOME}/account-auth.json
             gcloud auth activate-service-account --key-file=${HOME}/account-auth.json
+            gcloud --quiet config set project ${GCP_PROJECT}
+            gcloud --quiet config set compute/zone ${CLOUDSDK_COMPUTE_ZONE}
             gcloud --quiet auth configure-docker         
       - run:
           name: Build docker image and set image tag
