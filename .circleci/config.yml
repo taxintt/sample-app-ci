@@ -87,3 +87,6 @@ workflows:
           filters:
             branches:
               only: master
+      - create_pr:
+          requires:
+            - build
