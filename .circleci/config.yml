@@ -29,6 +29,56 @@ jobs:
           success_message: ':circleci-pass: Branch: $CIRCLE_BRANCH\nUser：$CIRCLE_USERNAME'
           failure_message: ':circleci-fail: Branch: $CIRCLE_BRANCH\nUser：$CIRCLE_USERNAME'
           webhook: ${SLACK_WEBHOOK}
+  create_pr:
+    docker:
+      - image: circleci/golang:1.11-stretch
+    steps:
+      - checkout
+      - run:
+          name: apt-get update for wget
+          command: |
+            apt-get update
+            apt-get install -y wget
+      - run:
+          name: install kubectl
+          command: |
+            curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl
+            mv kubectl /usr/local/bin
+            chmod +x /usr/local/bin/kubectl
+      - run:
+          name: install kustomize
+          command: |
+            wget https://github.com/kubernetes-sigs/kustomize/releases/download/kustomize%2Fv3.5.4/kustomize_v3.5.4_linux_amd64.tar.gz
+            tar xvzf kustomize_v3.5.4_linux_amd64.tar.gz
+            mv kustomize /usr/local/bin
+            chmod +x /usr/local/bin/kustomize
+      - run:
+          name: install hub
+          command: |
+            curl -sSLf https://github.com/github/hub/releases/download/v2.8.3/hub-linux-amd64-2.8.3.tgz | \
+            tar zxf - --strip-components=1 -C /tmp/ && \
+            mv /tmp/bin/hub /usr/local/bin/hub
+      - run:
+          name: clone kubernetes manifests repo
+          command: |
+            git clone --depth 1 -b master git@github.com:TaxiN/sample-manifest-repo.git
+            cd ./sample-manifest-repo/overlays/staging
+      - run:
+          name: edit kubernetes manifests
+          command: |
+            kustomize edit set image {GCR_REPO}/${IMAGE_NAME}:$CIRCLE_SHA1
+      - run:
+          name: commit to manifest repo
+          command: |
+            git config user.email "circleci-user@noreply.github.com"
+            git config user.name "circleci-user"
+            git add -A 
+            git commit -m "modify image tag"
+            git push origin ${HEAD_BRANCH}
+      - run:
+          name: create a pull request
+          command: |
+            hub pull-request --message="update image tag" --base=${CIRCLE_PROJECT_USERNAME}:master --head=${CIRCLE_PROJECT_USERNAME}:${HEAD_BRANCH}
 workflows:
   version: 2
   build:
