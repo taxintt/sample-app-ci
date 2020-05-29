@@ -35,6 +35,11 @@ jobs:
     steps:
       - checkout
       - run:
+          name: apt-get update for wget
+          command: |
+            apt-get update
+            apt-get install -y wget
+      - run:
           name: install kubectl
           command: |
             curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl
