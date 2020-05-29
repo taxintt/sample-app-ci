@@ -31,7 +31,7 @@ jobs:
           webhook: ${SLACK_WEBHOOK}
   create_pr:
     docker:
-      - image: busybox
+      - image: google/cloud-sdk
     steps:
       - checkout
       - run:
