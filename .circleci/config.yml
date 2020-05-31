@@ -62,12 +62,17 @@ jobs:
           name: clone kubernetes manifests repo
           command: |
             git clone --depth 1 -b master git@github.com:TaxiN/sample-manifest-repo.git
+            cd ./sample-manifest-repo/overlays/staging
       - run:
           name: edit kubernetes manifests
           command: |
-            cd ./sample-manifest-repo/overlays/staging
-            ls -la ./
             kustomize edit set image {GCR_REPO}/${IMAGE_NAME}:$CIRCLE_SHA1
+      - run:
+          name: checkout another repo
+          command: |
+            git fetch origin
+            git checkout -b ${HEAD_BRANCH} origin/${HEAD_BRANCH}
+            git branch --set-upstream-to=origin/${HEAD_BRANCH} ${HEAD_BRANCH}
       - run:
           name: commit to manifest repo
           command: |
