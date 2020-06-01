@@ -59,15 +59,15 @@ jobs:
             tar zxf - --strip-components=1 -C /tmp/ && \
             mv /tmp/bin/hub /usr/local/bin/hub
       - run:
-          name: edit kubernetes manifests
-          command: |
-            cd ./sample-manifest-repo/overlays/staging
-            kustomize edit set image {GCR_REPO}/${IMAGE_NAME}:$CIRCLE_SHA1
-      - run:
           name: clone kubernetes manifests repo
           command: |
             git clone --depth 1 -b master git@github.com:TaxiN/sample-manifest-repo.git
             git checkout --no-track -b ${HEAD_BRANCH}
+      - run:
+          name: edit kubernetes manifests
+          command: |
+            cd ./sample-manifest-repo/overlays/staging
+            kustomize edit set image {GCR_REPO}/${IMAGE_NAME}:$CIRCLE_SHA1
       - run:
           name: commit to manifest repo
           command: |
