@@ -59,31 +59,24 @@ jobs:
             tar zxf - --strip-components=1 -C /tmp/ && \
             mv /tmp/bin/hub /usr/local/bin/hub
       - run:
-          name: clone kubernetes manifests repo
-          command: |
-            git clone --depth 1 -b master git@github.com:TaxiN/sample-manifest-repo.git
-            cd ./sample-manifest-repo/overlays/staging
-      - run:
           name: edit kubernetes manifests
           command: |
             kustomize edit set image {GCR_REPO}/${IMAGE_NAME}:$CIRCLE_SHA1
       - run:
-          name: checkout another repo
+          name: clone kubernetes manifests repo
           command: |
-            git fetch origin
-            git checkout -b ${HEAD_BRANCH} origin/${HEAD_BRANCH}
-            git branch --set-upstream-to=origin/${HEAD_BRANCH} ${HEAD_BRANCH}
+            git clone --depth 1 -b master git@github.com:TaxiN/sample-manifest-repo.git
+            git checkout --no-track -b ${HEAD_BRANCH}
       - run:
           name: commit to manifest repo
           command: |
-            git config user.email "circleci-user@noreply.github.com"
-            git config user.name "circleci-user"
-            git add -A 
-            git commit -m "modify image tag"
-            git push origin ${HEAD_BRANCH}
+            git config --global user.email "circleci-user@noreply.github.com"
+            git config --global user.name "circleci-user"
+            git commit -am "modify image tag"
       - run:
           name: create a pull request
           command: |
+            hub push origin ${HEAD_BRANCH}
             hub pull-request --message="update image tag" --base=${CIRCLE_PROJECT_USERNAME}:master --head=${CIRCLE_PROJECT_USERNAME}:${HEAD_BRANCH}
 workflows:
   version: 2
