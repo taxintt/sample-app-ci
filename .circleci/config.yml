@@ -73,14 +73,9 @@ jobs:
             git config --global user.email "circleci-user@noreply.github.com"
             git config --global user.name "circleci-user"
       - run:
-          name: chack github config
-          command: |
-            git remote -v
-            ssh -vT git@github.com
-      - run:
           name: commit and push the changes
           command: |
-            git checkout --no-track -b ${HEAD_BRANCH}
+            git checkout -b ${HEAD_BRANCH} --track origin/${HEAD_BRANCH}
             git add sample-manifest-repo/
             git commit -am "[ci skip] modify image tag"
             git push origin ${HEAD_BRANCH}
