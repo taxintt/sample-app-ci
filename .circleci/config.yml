@@ -78,7 +78,8 @@ jobs:
       - run:
           name: commit and push the changes
           command: |
-            git checkout -b ${HEAD_BRANCH} --track origin/${HEAD_BRANCH}
+            git checkout -b ${HEAD_BRANCH} origin/${HEAD_BRANCH}
+            git branch --set-upstream-to=origin/${HEAD_BRANCH} ${HEAD_BRANCH}
             git add sample-manifest-repo/
             git commit -am "[ci skip] modify image tag"
             git push origin ${HEAD_BRANCH}
