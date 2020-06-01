@@ -68,11 +68,13 @@ jobs:
             cd ./sample-manifest-repo/overlays/staging
             kustomize edit set image {GCR_REPO}/${IMAGE_NAME}:$CIRCLE_SHA1
       - run:
-          name: commit to manifest repo
+          name: set config of github repo
           command: |
             git config --global user.email "circleci-user@noreply.github.com"
             git config --global user.name "circleci-user"
-            git branch --set-upstream-to=origin/${HEAD_BRANCH} ${HEAD_BRANCH}
+      - run:
+          name: set config of github repo
+          command: |
             git checkout --no-track -b ${HEAD_BRANCH}
             git add sample-manifest-repo/
             git commit -am "[ci skip] modify image tag"
