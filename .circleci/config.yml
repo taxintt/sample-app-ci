@@ -61,6 +61,7 @@ jobs:
       - run:
           name: edit kubernetes manifests
           command: |
+            cd ./sample-manifest-repo/overlays/staging
             kustomize edit set image {GCR_REPO}/${IMAGE_NAME}:$CIRCLE_SHA1
       - run:
           name: clone kubernetes manifests repo
