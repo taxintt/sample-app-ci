@@ -79,6 +79,9 @@ jobs:
             git add sample-manifest-repo/
             git commit -am "[ci skip] modify image tag"
             git push origin ${HEAD_BRANCH}
+      - add_ssh_keys:
+          fingerprints:
+            - "e0:a9:bf:7d:57:2f:f2:ef:f8:a3:01:05:a9:6a:6a:0e"
       - run:
           name: create a pull request
           command: |
