@@ -73,6 +73,7 @@ jobs:
           command: |
             git config --global user.email "circleci-user@noreply.github.com"
             git config --global user.name "circleci-user"
+            git add sample-manifest-repo/
             git commit -am "modify image tag"
       - run:
           name: create a pull request
