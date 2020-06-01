@@ -34,6 +34,9 @@ jobs:
       - image: google/cloud-sdk
     steps:
       - checkout
+      - add_ssh_keys:
+          fingerprints:
+            - "e0:a9:bf:7d:57:2f:f2:ef:f8:a3:01:05:a9:6a:6a:0e"
       - run:
           name: apt-get update for wget
           command: |
@@ -73,7 +76,7 @@ jobs:
             git config --global user.email "circleci-user@noreply.github.com"
             git config --global user.name "circleci-user"
       - run:
-          name: set config of github repo
+          name: commit and push the changes
           command: |
             git checkout --no-track -b ${HEAD_BRANCH}
             git add sample-manifest-repo/
