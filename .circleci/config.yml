@@ -61,7 +61,7 @@ jobs:
       - run:
           name: clone kubernetes manifests repo
           command: |
-            git clone --depth 1 -b master git@github.com:TaxiN/sample-manifest-repo.git
+            git clone --depth 1 -b stg git@github.com:TaxiN/sample-manifest-repo.git
       - run:
           name: edit kubernetes manifests
           command: |
@@ -79,6 +79,7 @@ jobs:
           name: commit and push the changes
           command: |
             git remote set-url origin https://github.com/TaxiN/sample-manifest-repo.git
+            git fetch
             git checkout stg 
             git branch --set-upstream-to=origin/stg stg
             git add sample-manifest-repo/
