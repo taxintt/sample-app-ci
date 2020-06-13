@@ -79,7 +79,7 @@ jobs:
           name: commit and push the changes
           command: |
             git remote set-url origin https://github.com/TaxiN/sample-manifest-repo.git
-            git checkout -b stg origin/stg
+            git checkout stg 
             git branch --set-upstream-to=origin/stg stg
             git add sample-manifest-repo/
             git commit -am "[ci skip] modify image tag"
