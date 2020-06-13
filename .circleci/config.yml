@@ -81,6 +81,7 @@ jobs:
             git checkout -b ${HEAD_BRANCH} origin/${HEAD_BRANCH}
             git branch --set-upstream-to=origin/${HEAD_BRANCH} ${HEAD_BRANCH}
             git add sample-manifest-repo/
+            git remote rm sample-app-repo
             git commit -am "[ci skip] modify image tag"
             git push origin ${HEAD_BRANCH}
       - run:
