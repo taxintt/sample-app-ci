@@ -87,7 +87,7 @@ jobs:
       - run:
           name: create a pull request
           command: |
-            hub pull-request \
+            hub pull-request --push \
               --message="Deploying image ${GCR_REPO}/${IMAGE_NAME}:$CIRCLE_SHA1 \
               Built from commit ${COMMIT_SHA} of repository sample-app-ci \
               Author: $(git log --format='%an <%ae>' -n 1 HEAD)" \
