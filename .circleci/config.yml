@@ -32,7 +32,6 @@ jobs:
   create_pr:
     docker:
       - image: google/cloud-sdk
-    working_directory: /go/src/github.com/TaxiN/sample-manifest-ci
     steps:
       - checkout
       - run:
@@ -64,12 +63,10 @@ jobs:
           command: |
             git clone --depth 1 -b stg git@github.com:TaxiN/sample-manifest-repo.git
             git remote set-url origin https://github.com/TaxiN/sample-manifest-repo.git
-            # git fetch
             ls -la
       - run:
           name: edit kubernetes manifests
           command: |
-            git checkout stg 
             cd ./sample-manifest-repo/overlays/staging
             kustomize edit set image ${GCR_REPO}/${IMAGE_NAME}:$CIRCLE_SHA1
       - run:
