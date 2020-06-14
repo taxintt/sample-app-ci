@@ -82,6 +82,7 @@ jobs:
           command: |
             cd ./sample-manifest-repo
             git add .
+            git status
             cat ./overlays/staging/kustomization.yaml
             # git commit -m "Updating image tag ${GCR_REPO}/${IMAGE_NAME}:$CIRCLE_SHA1"
             # git push origin stg
