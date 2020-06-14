@@ -59,14 +59,13 @@ jobs:
             curl -sSLf https://github.com/github/hub/releases/download/v2.8.3/hub-linux-amd64-2.8.3.tgz | \
             tar zxf - --strip-components=1 -C /tmp/ && \
             mv /tmp/bin/hub /usr/local/bin/hub
-      # - run:
-      #     name: clone kubernetes manifests repo
-      #     command: |
-      #       # git clone --depth 1 -b stg git@github.com:TaxiN/sample-manifest-repo.git
-      #       # ls -la
-      #       git remote set-url origin https://github.com/TaxiN/sample-manifest-repo.git
-      #       git fetch
-      #       ls -la
+      - run:
+          name: clone kubernetes manifests repo
+          command: |
+            git clone --depth 1 -b stg git@github.com:TaxiN/sample-manifest-repo.git
+            git remote set-url origin https://github.com/TaxiN/sample-manifest-repo.git
+            # git fetch
+            ls -la
       - run:
           name: edit kubernetes manifests
           command: |
