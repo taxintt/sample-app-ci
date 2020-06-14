@@ -59,32 +59,33 @@ jobs:
             tar zxf - --strip-components=1 -C /tmp/ && \
             mv /tmp/bin/hub /usr/local/bin/hub
       - run:
+          name: set config of github repo
+          command: |
+            git config --global user.email "circleci-user@noreply.github.com"
+            git config --global user.name "circleci-user"
+      - run:
           name: clone kubernetes manifests repo
           command: |
             git clone --depth 1 -b stg git@github.com:TaxiN/sample-manifest-repo.git
-            git remote set-url origin https://github.com/TaxiN/sample-manifest-repo.git
-            ls -la
+            cd sample-manifest-repo
+            git init
+            git checkout stg
       - run:
           name: edit kubernetes manifests
           command: |
             cd ./sample-manifest-repo/overlays/staging
             kustomize edit set image ${GCR_REPO}/${IMAGE_NAME}:$CIRCLE_SHA1
-      - run:
-          name: set config of github repo
-          command: |
-            git config --global user.email "circleci-user@noreply.github.com"
-            git config --global user.name "circleci-user"
+      
       - add_ssh_keys:
           fingerprints:
             - "e0:a9:bf:7d:57:2f:f2:ef:f8:a3:01:05:a9:6a:6a:0e"
       - run:
           name: commit and push the changes
           command: |
-            git add -A
-            ls -la
+            git add .
             cat ./sample-manifest-repo/overlays/staging/kustomization.yaml
-            # git commit -am "[app-ci skip] modify image tag"
-            # git push origin stg
+            # git commit -am "[app-ci passed] modify image tag"
+            # git push --set-upstream origin stg
       - run:
           name: create a pull request
           command: |
