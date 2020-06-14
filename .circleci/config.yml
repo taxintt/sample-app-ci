@@ -81,10 +81,10 @@ jobs:
             git remote set-url origin https://github.com/TaxiN/sample-manifest-repo.git
             git fetch
             git checkout stg 
-            git branch --set-upstream-to=origin/stg stg
-            git add sample-manifest-repo/
-            git commit -am "[ci skip] modify image tag"
-            git push origin stg
+            git add -A
+            ls -la
+            # git commit -am "[app-ci skip] modify image tag"
+            # git push origin stg
       - run:
           name: create a pull request
           command: |
