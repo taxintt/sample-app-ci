@@ -32,6 +32,7 @@ jobs:
   create_pr:
     docker:
       - image: google/cloud-sdk
+    working_directory: /go/src/github.com/TaxiN/sample-manifest-ci
     steps:
       - checkout
       - run:
@@ -58,17 +59,20 @@ jobs:
             curl -sSLf https://github.com/github/hub/releases/download/v2.8.3/hub-linux-amd64-2.8.3.tgz | \
             tar zxf - --strip-components=1 -C /tmp/ && \
             mv /tmp/bin/hub /usr/local/bin/hub
-      - run:
-          name: clone kubernetes manifests repo
-          command: |
-            git clone --depth 1 -b stg git@github.com:TaxiN/sample-manifest-repo.git
-            ls -la
+      # - run:
+      #     name: clone kubernetes manifests repo
+      #     command: |
+      #       # git clone --depth 1 -b stg git@github.com:TaxiN/sample-manifest-repo.git
+      #       # ls -la
+      #       git remote set-url origin https://github.com/TaxiN/sample-manifest-repo.git
+      #       git fetch
+      #       ls -la
       - run:
           name: edit kubernetes manifests
           command: |
+            git checkout stg 
             cd ./sample-manifest-repo/overlays/staging
-            kustomize edit set image {GCR_REPO}/${IMAGE_NAME}:$CIRCLE_SHA1
-            ls -la
+            kustomize edit set image ${GCR_REPO}/${IMAGE_NAME}:$CIRCLE_SHA1
       - run:
           name: set config of github repo
           command: |
@@ -80,12 +84,9 @@ jobs:
       - run:
           name: commit and push the changes
           command: |
-            git remote set-url origin https://github.com/TaxiN/sample-manifest-repo.git
-            ls -la
-            git fetch
-            git checkout stg 
             git add -A
             ls -la
+            cat ./sample-manifest-repo/overlays/staging/kustomization.yaml
             # git commit -am "[app-ci skip] modify image tag"
             # git push origin stg
       - run:
