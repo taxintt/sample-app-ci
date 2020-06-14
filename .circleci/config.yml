@@ -85,9 +85,6 @@ jobs:
             git commit -m "Updating image tag ${GCR_REPO}/${IMAGE_NAME}:$CIRCLE_SHA1"
             git branch --set-upstream-to=origin/stg stg
             git push origin stg
-      - run:
-          name: create a pull request
-          command: |
             hub pull-request \
               --message="Deploying image ${GCR_REPO}/${IMAGE_NAME}:$CIRCLE_SHA1 \
               Built from commit ${COMMIT_SHA} of repository sample-app-ci \
