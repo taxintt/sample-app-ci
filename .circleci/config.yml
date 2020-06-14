@@ -67,30 +67,31 @@ jobs:
           name: clone kubernetes manifests repo
           command: |
             git clone --depth 1 -b stg git@github.com:TaxiN/sample-manifest-repo.git
-            cd sample-manifest-repo
-            git init
-            git checkout stg
+            cd ./sample-manifest-repo
+            git remote set-url origin git@github.com:TaxiN/sample-manifest-repo.git
       - run:
           name: edit kubernetes manifests
           command: |
             cd ./sample-manifest-repo/overlays/staging
             kustomize edit set image ${GCR_REPO}/${IMAGE_NAME}:$CIRCLE_SHA1
-      
       - add_ssh_keys:
           fingerprints:
             - "e0:a9:bf:7d:57:2f:f2:ef:f8:a3:01:05:a9:6a:6a:0e"
       - run:
           name: commit and push the changes
           command: |
+            cd ./sample-manifest-repo
             git add .
-            cat ./sample-manifest-repo/overlays/staging/kustomization.yaml
-            # git commit -am "[app-ci passed] modify image tag"
-            # git push --set-upstream origin stg
+            cat ./overlays/staging/kustomization.yaml
+            # git commit -m "Updating image tag ${GCR_REPO}/${IMAGE_NAME}:$CIRCLE_SHA1"
+            # git push origin stg
       - run:
           name: create a pull request
           command: |
             hub pull-request \
-              --message="update image tag" \
+              --message="Deploying image ${GCR_REPO}/${IMAGE_NAME}:$CIRCLE_SHA1 \
+              Built from commit ${COMMIT_SHA} of repository sample-app-ci \
+              Author: $(git log --format='%an <%ae>' -n 1 HEAD)" \
               --base=${CIRCLE_PROJECT_USERNAME}:master \
               --head=${CIRCLE_PROJECT_USERNAME}:stg
 workflows:
