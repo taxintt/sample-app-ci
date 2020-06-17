@@ -13,7 +13,6 @@ WORKDIR /src/
 COPY /src/main/main.go /src/
 COPY go.* /src/
 
-# TODO: パッケージを利用する場合にはbuildの方法を修正する必要がある
 RUN go build -o /bin/demo
 
 # step2: exec
