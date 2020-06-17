@@ -90,24 +90,12 @@ jobs:
             curl -sSLf https://github.com/github/hub/releases/download/v2.8.3/hub-linux-amd64-2.8.3.tgz | \
             tar zxf - --strip-components=1 -C /tmp/ && \
             mv /tmp/bin/hub /usr/local/bin/hub
-      - run:
-          name: set config of github repo
-          command: |
-            git config --global user.email "circleci-user@noreply.github.com"
-            git config --global user.name "circleci-user"
-      - run:
-          name: clone kubernetes manifests repo
-          command: |
-            git clone --depth 1 -b stg git@github.com:TaxiN/sample-manifest-repo.git
-            cd ./sample-manifest-repo
-            git remote set-url origin git@github.com:TaxiN/sample-manifest-repo.git
       - add_ssh_keys:
           fingerprints:
             - "e0:a9:bf:7d:57:2f:f2:ef:f8:a3:01:05:a9:6a:6a:0e"
       - run:
           name: create pr
           command: |
-            cd ./sample-manifest-repo
             hub pull-request \
               --message="Deploying image ${GCR_REPO}/${IMAGE_NAME}:$CIRCLE_SHA1 \
               Built from commit ${COMMIT_SHA} of repository sample-app-ci \
